@@ -4,7 +4,7 @@ import menuData from './Data';
 
 const Menu = () => {
   const [menuList, setMenuList] = useState(menuData);
-  const [isTrue, setIsTrue] = useState(true);
+  //   const [isTrue, setIsTrue] = useState(true);
 
   const filterItems = (cat) => {
     const filterMenuItems = menuList.filter((item) => {
