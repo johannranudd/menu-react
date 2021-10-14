@@ -15,10 +15,34 @@ const Menu = () => {
         <nav className='btn-container'>
           <MenuBtns menu={menuList} />
         </nav>
+        <section className='menu-items'>
+          {menuList.map((item) => {
+            return <MenuItems key={item.id} {...item} />;
+          })}
+        </section>
       </section>
     </StyledMain>
   );
 };
+
+// *menu items
+
+const MenuItems = ({ title, img, desc, price }) => {
+  return (
+    <article className='single-menu-item'>
+      <img src={img} alt='' />
+      <footer className='info-container'>
+        <div className='name-and-price'>
+          <h4>{title}</h4>
+          <p>{price}</p>
+        </div>
+        <p className='description'>{desc}</p>
+      </footer>
+    </article>
+  );
+};
+
+// *buttons
 
 const MenuBtns = ({ menu }) => {
   const reduceCat = menu.reduce(
