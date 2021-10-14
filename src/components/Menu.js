@@ -1,9 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyledMain } from '../styled-components/Main.styled';
 import menuData from './Data';
 
 const Menu = () => {
   const [menuList, setMenuList] = useState(menuData);
+  const [isTrue, setIsTrue] = useState(true);
+
+  const filterItems = (cat) => {
+    const filterMenuItems = menuList.filter((item) => {
+      if (item.category === cat) {
+        return item;
+      }
+    });
+    setMenuList(filterMenuItems);
+  };
 
   return (
     <StyledMain>
@@ -13,7 +23,7 @@ const Menu = () => {
           <div className='underline'></div>
         </header>
         <nav className='btn-container'>
-          <MenuBtns menu={menuList} />
+          <MenuBtns menu={menuData} filterItems={filterItems} />
         </nav>
         <section className='menu-items'>
           {menuList.map((item) => {
@@ -44,7 +54,7 @@ const MenuItems = ({ title, img, desc, price }) => {
 
 // *buttons
 
-const MenuBtns = ({ menu }) => {
+const MenuBtns = ({ menu, filterItems }) => {
   const reduceCat = menu.reduce(
     (total, value) => {
       if (!total.includes(value.category)) {
@@ -59,7 +69,7 @@ const MenuBtns = ({ menu }) => {
     <>
       {reduceCat.map((item, index) => {
         return (
-          <button key={index} className='btn'>
+          <button key={index} className='btn' onClick={() => filterItems(item)}>
             {item}
           </button>
         );
