@@ -12,14 +12,16 @@ const Menu = () => {
           <h1>Our Menu</h1>
           <div className='underline'></div>
         </header>
-        <MenuBtns menu={menuList} />;
+        <nav className='btn-container'>
+          <MenuBtns menu={menuList} />
+        </nav>
       </section>
     </StyledMain>
   );
 };
 
 const MenuBtns = ({ menu }) => {
-  const filterCat = menu.reduce(
+  const reduceCat = menu.reduce(
     (total, value) => {
       if (!total.includes(value.category)) {
         total.push(value.category);
@@ -28,11 +30,17 @@ const MenuBtns = ({ menu }) => {
     },
     ['All']
   );
-  console.log(filterCat);
+
   return (
-    <nav className='btn-container'>
-      <button className='btn'>button</button>
-    </nav>
+    <>
+      {reduceCat.map((item, index) => {
+        return (
+          <button key={index} className='btn'>
+            {item}
+          </button>
+        );
+      })}
+    </>
   );
 };
 
