@@ -2,6 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { StyledMain } from '../styled-components/Main.styled';
 import menuData from './Data';
 
+const reduceCat = menuData.reduce(
+  (total, value) => {
+    if (!total.includes(value.category)) {
+      total.push(value.category);
+    }
+    return total;
+  },
+  ['All']
+);
+
 const Menu = () => {
   const [menuList, setMenuList] = useState(menuData);
   //   const [isTrue, setIsTrue] = useState(true);
@@ -23,7 +33,11 @@ const Menu = () => {
           <div className='underline'></div>
         </header>
         <nav className='btn-container'>
-          <MenuBtns menu={menuData} filterItems={filterItems} />
+          <MenuBtns
+            menu={menuData}
+            filterItems={filterItems}
+            reduceCat={reduceCat}
+          />
         </nav>
         <section className='menu-items'>
           {menuList.map((item) => {
@@ -54,17 +68,7 @@ const MenuItems = ({ title, img, desc, price }) => {
 
 // *buttons
 
-const MenuBtns = ({ menu, filterItems }) => {
-  const reduceCat = menu.reduce(
-    (total, value) => {
-      if (!total.includes(value.category)) {
-        total.push(value.category);
-      }
-      return total;
-    },
-    ['All']
-  );
-
+const MenuBtns = ({ reduceCat, filterItems }) => {
   return (
     <>
       {reduceCat.map((item, index) => {
