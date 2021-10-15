@@ -2,38 +2,28 @@ import React, { useState } from 'react';
 import { StyledMain } from '../styled-components/Main.styled';
 import menuData from './Data';
 
-// const allCategories = new Set([
-//   ...'All',
-//   menuData.filter((item) => {
-//     return;
-//   }),
-// ]);
-
-const allCategories = menuData.reduce(
-  (total, value) => {
-    if (!total.includes(value.category)) {
-      total.push(value.category);
-    }
-    return total;
-  },
-  ['All']
-);
-
 const Menu = () => {
-  const [menuItems, setMenuItems] = useState(menuData);
-  const [categories, setCategories] = useState(allCategories);
+  const [menuList, setMenuList] = useState(menuData);
+
+  const allCategories = menuData.reduce(
+    (total, value) => {
+      if (!total.includes(value.category)) {
+        total.push(value.category);
+      }
+      return total;
+    },
+    ['all']
+  );
 
   const filterItems = (category) => {
-    if (category === 'All') {
-      setMenuItems(menuData);
+    if (category === 'all') {
+      setMenuList(menuData);
       return;
     }
     const newItems = menuData.filter((item) => {
-      if (item.category === category) {
-        return item;
-      }
+      return item.category === category;
     });
-    setMenuItems(newItems);
+    setMenuList(newItems);
   };
 
   return (
@@ -42,41 +32,38 @@ const Menu = () => {
         <h1>Our Menu</h1>
         <div className='underline'></div>
       </div>
-      <Categories categories={categories} filterItems={filterItems} />
-      <MenuItems menuItems={menuItems} />
+      <Categories filterItems={filterItems} allCategories={allCategories} />
+      <MenuItems menuList={menuList} />
     </StyledMain>
   );
 };
 
-const Categories = ({ categories, filterItems }) => {
-  // console.log(categories);
+const Categories = ({ allCategories, filterItems }) => {
   return (
-    <div className='btn-container'>
-      {categories.map((item) => {
-        // console.log(item);
+    <section className='btn-container'>
+      {allCategories.map((item, index) => {
         return (
-          <button className='btn' onClick={() => filterItems(item)}>
+          <button key={index} className='btn' onClick={() => filterItems(item)}>
             {item}
           </button>
         );
       })}
-    </div>
+    </section>
   );
 };
-
-const MenuItems = ({ menuItems }) => {
+const MenuItems = ({ menuList }) => {
   return (
     <section className='container'>
-      {menuItems.map((menuItem) => {
-        const { id, title, category, img, price, desc } = menuItem;
+      {menuList.map((item) => {
+        const { id, title, desc, img, price } = item;
         return (
           <article key={id} className='menu-item'>
             <img src={img} alt='' />
             <header>
-              <h4 className='title'>{title}</h4>
-              <p className='price'>{price}</p>
+              <h4>{title}</h4>
+              <p>{price}</p>
             </header>
-            <p className='description'>{desc}</p>
+            <p>{desc}</p>
           </article>
         );
       })}
