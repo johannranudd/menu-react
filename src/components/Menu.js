@@ -1,8 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StyledMain } from '../styled-components/Main.styled';
 import menuData from './Data';
 
-const reduceCat = menuData.reduce(
+// const allCategories = new Set([
+//   ...'All',
+//   menuData.filter((item) => {
+//     return;
+//   }),
+// ]);
+
+const allCategories = menuData.reduce(
   (total, value) => {
     if (!total.includes(value.category)) {
       total.push(value.category);
@@ -13,72 +20,67 @@ const reduceCat = menuData.reduce(
 );
 
 const Menu = () => {
-  const [menuList, setMenuList] = useState(menuData);
-  //   const [isTrue, setIsTrue] = useState(true);
+  const [menuItems, setMenuItems] = useState(menuData);
+  const [categories, setCategories] = useState(allCategories);
 
-  const filterItems = (cat) => {
-    const filterMenuItems = menuList.filter((item) => {
-      if (item.category === cat) {
+  const filterItems = (category) => {
+    if (category === 'All') {
+      setMenuItems(menuData);
+      return;
+    }
+    const newItems = menuData.filter((item) => {
+      if (item.category === category) {
         return item;
       }
     });
-    setMenuList(filterMenuItems);
+    setMenuItems(newItems);
   };
 
   return (
     <StyledMain>
-      <section className='container'>
-        <header className='headline'>
-          <h1>Our Menu</h1>
-          <div className='underline'></div>
-        </header>
-        <nav className='btn-container'>
-          <MenuBtns
-            menu={menuData}
-            filterItems={filterItems}
-            reduceCat={reduceCat}
-          />
-        </nav>
-        <section className='menu-items'>
-          {menuList.map((item) => {
-            return <MenuItems key={item.id} {...item} />;
-          })}
-        </section>
-      </section>
+      <div className='headline'>
+        <h1>Our Menu</h1>
+        <div className='underline'></div>
+      </div>
+      <Categories categories={categories} filterItems={filterItems} />
+      <MenuItems menuItems={menuItems} />
     </StyledMain>
   );
 };
 
-// *menu items
-
-const MenuItems = ({ title, img, desc, price }) => {
+const Categories = ({ categories, filterItems }) => {
+  // console.log(categories);
   return (
-    <article className='single-menu-item'>
-      <img src={img} alt='' />
-      <footer className='info-container'>
-        <div className='name-and-price'>
-          <h4>{title}</h4>
-          <p>{price}</p>
-        </div>
-        <p className='description'>{desc}</p>
-      </footer>
-    </article>
-  );
-};
-
-// *buttons
-
-const MenuBtns = ({ reduceCat, filterItems }) => {
-  return (
-    <>
-      {reduceCat.map((item, index) => {
+    <div className='btn-container'>
+      {categories.map((item) => {
+        // console.log(item);
         return (
-          <button key={index} className='btn' onClick={() => filterItems(item)}>
+          <button className='btn' onClick={() => filterItems(item)}>
             {item}
           </button>
         );
       })}
-    </>
+    </div>
+  );
+};
+
+const MenuItems = ({ menuItems }) => {
+  return (
+    <section className='container'>
+      {menuItems.map((menuItem) => {
+        const { id, title, category, img, price, desc } = menuItem;
+        return (
+          <article key={id} className='menu-item'>
+            <img src={img} alt='' />
+            <header>
+              <h4 className='title'>{title}</h4>
+              <p className='price'>{price}</p>
+            </header>
+            <p className='description'>{desc}</p>
+          </article>
+        );
+      })}
+    </section>
   );
 };
 
