@@ -5,7 +5,7 @@ import menuData from './Data';
 const Menu = () => {
   const [menuList, setMenuList] = useState(menuData);
 
-  const allCategories = menuData.reduce(
+  const categoriesReduced = menuData.reduce(
     (total, value) => {
       if (!total.includes(value.category)) {
         total.push(value.category);
@@ -32,16 +32,19 @@ const Menu = () => {
         <h1>Our Menu</h1>
         <div className='underline'></div>
       </div>
-      <Categories filterItems={filterItems} allCategories={allCategories} />
+      <Categories
+        filterItems={filterItems}
+        categoriesReduced={categoriesReduced}
+      />
       <MenuItems menuList={menuList} />
     </StyledMain>
   );
 };
 
-const Categories = ({ allCategories, filterItems }) => {
+const Categories = ({ categoriesReduced, filterItems }) => {
   return (
-    <section className='btn-container'>
-      {allCategories.map((item, index) => {
+    <section className='btn-section'>
+      {categoriesReduced.map((item, index) => {
         return (
           <button key={index} className='btn' onClick={() => filterItems(item)}>
             {item}
@@ -51,19 +54,22 @@ const Categories = ({ allCategories, filterItems }) => {
     </section>
   );
 };
+
 const MenuItems = ({ menuList }) => {
   return (
-    <section className='container'>
+    <section className='menu-container'>
       {menuList.map((item) => {
-        const { id, title, desc, img, price } = item;
+        const { id, desc, img, price, title } = item;
         return (
-          <article key={id} className='menu-item'>
+          <article className='menu-item' key={id}>
             <img src={img} alt='' />
-            <header>
-              <h4>{title}</h4>
-              <p>{price}</p>
-            </header>
-            <p>{desc}</p>
+            <div>
+              <header>
+                <h4 className='title'>{title}</h4>
+                <p className='price'>$ {price}</p>
+              </header>
+              <p className='description'>{desc}</p>
+            </div>
           </article>
         );
       })}
